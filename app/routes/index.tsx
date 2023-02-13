@@ -1,33 +1,18 @@
+import { redirect } from "@remix-run/node";
+
+const baseUrl = "https://github.com/login/oauth/authorize";
+const clientId = process.env.GITHUB_CLIENT_ID;
+
+const login = () => { 
+  redirect(`${baseUrl}?client_id=${clientId}`);
+}
+
 export default function Index() {
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
-      <h1>Welcome to Remix</h1>
-      <ul>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/blog"
-            rel="noreferrer"
-            className="text-blue-400 underline"
-          >
-            15m Quickstart Blog Tutorial
-          </a>
-        </li>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/jokes"
-            rel="noreferrer"
-          >
-            Deep Dive Jokes App Tutorial
-          </a>
-        </li>
-        <li>
-          <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-            Remix Docs
-          </a>
-        </li>
-      </ul>
-    </div>
+    <>
+      <a href={`${baseUrl}?client_id=${clientId}`}>
+        <button onClick={login}>Login</button>
+      </a>
+    </>
   );
 }
