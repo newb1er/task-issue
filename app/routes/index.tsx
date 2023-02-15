@@ -1,18 +1,38 @@
-import { redirect } from "@remix-run/node";
+import { json, redirect, type LoaderArgs } from "@remix-run/node";
+import { z } from 'zod';
 
-const baseUrl = "https://github.com/login/oauth/authorize";
-const clientId = process.env.GITHUB_CLIENT_ID;
+import { oauthToken } from "~/cookie";
 
-const login = () => { 
-  redirect(`${baseUrl}?client_id=${clientId}`);
-}
+const tokenCookieSchema = z.object({
+  access_token: z.string(),
+  token_type: z.enum(['basic', 'bearer']),
+  scope: z.string()
+});
+
+export const loader = async ({ request }: LoaderArgs) => {
+  try {
+    const token = tokenCookieSchema.parse(
+      await oauthToken.parse(request.headers.get('Cookie')) || {}
+    );
+
+    const ret = await fetch('https://api.github.com/', {
+      headers: {
+        "Authentication": `${token.token_type} ${token.access_token}`
+      }
+    })
+
+    if (!ret.ok) throw Error('Not Authenticated');
+
+    return json(token);
+
+  } catch {
+    return redirect('/github/login');
+  }
+};
 
 export default function Index() {
   return (
     <>
-      <a href={`${baseUrl}?client_id=${clientId}`}>
-        <button onClick={login}>Login</button>
-      </a>
     </>
   );
 }
