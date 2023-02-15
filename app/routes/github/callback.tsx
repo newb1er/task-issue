@@ -1,5 +1,6 @@
-import { type LoaderArgs } from "@remix-run/node" 
-import { useLoaderData } from "@remix-run/react";
+import { redirect, type LoaderArgs } from "@remix-run/node" 
+import { oauthToken } from "~/cookie";
+
 
 const GhUrl = 'https://github.com/login/oauth/access_token';
 const clientId = process.env.GITHUB_CLIENT_ID as string;
@@ -20,13 +21,11 @@ export const loader = async ({ request }: LoaderArgs) => {
         headers: { "Accept": 'application/json' }
     });
 
-    return await token.json();
+    return redirect('/', {
+        headers: {
+            'Set-Cookie': await oauthToken.serialize(await token.json())
+        }
+    })
 }
 
-export default function Callback() {
-    const token = useLoaderData<typeof loader>();
-
-    return (
-        <div>code: {token.access_token}</div>
-    )
-}
+export default function Callback() { }
