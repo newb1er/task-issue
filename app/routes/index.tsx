@@ -38,11 +38,13 @@ const issuesQueryDocument = graphql(`
 
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const token = tokenCookieSchema.parse(
-    await oauthToken.parse(request.headers.get('Cookie')) || {}
-  );
+  let token;
 
   try {
+    token = tokenCookieSchema.parse(
+      await oauthToken.parse(request.headers.get('Cookie')) || {}
+    );
+
     const ret = await fetch('https://api.github.com/', {
       headers: {
         "Authentication": `${token.token_type} ${token.access_token}`
