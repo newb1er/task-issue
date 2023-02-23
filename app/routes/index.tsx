@@ -16,9 +16,9 @@ const tokenCookieSchema = z.object({
 });
 
 const issuesQueryDocument = graphql(`
-  query issues($after: String) {
+  query issues($after: String, $pagination: Int) {
     viewer {
-      issues(orderBy: {field: CREATED_AT, direction: DESC}, first: ${ISSUE_PAGINATION}, after: $after) {
+      issues(orderBy: { field: CREATED_AT, direction: DESC }, first: $pagination, after: $after) {
         totalCount
         edges {
           cursor
@@ -64,7 +64,7 @@ export const loader = async ({ request }: LoaderArgs) => {
     }
   });
 
-  const data = await graphqlClient.request(issuesQueryDocument, { after: null });
+  const data = await graphqlClient.request(issuesQueryDocument, { pagination: ISSUE_PAGINATION, after: null });
 
   return json(data.viewer.issues);
 };
