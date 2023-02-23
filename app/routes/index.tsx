@@ -72,8 +72,6 @@ export const loader = async ({ request }: LoaderArgs) => {
 export default function Index() {
   const issues = useLoaderData<typeof loader>();
 
-  console.log(issues);
-  
   const issuesListView = issues && issues?.edges?.map((issue, index) => 
     issue?.node && <li key={`issus-${index}`}>{issue.node.title}</li>
   );
