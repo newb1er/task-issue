@@ -1,10 +1,9 @@
 import { json, redirect, type LoaderArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { GraphQLClient } from "graphql-request";
 import { z } from 'zod';
 
 import { oauthToken } from "~/cookie";
-import { graphql } from "~/gql";
+import { getIssues } from "~/utils/issue";
 
 const ISSUE_PAGINATION = 10;
 
@@ -14,27 +13,6 @@ const tokenCookieSchema = z.object({
   token_type: z.enum(['basic', 'bearer']),
   scope: z.string()
 });
-
-const issuesQueryDocument = graphql(`
-  query issues($after: String, $pagination: Int) {
-    viewer {
-      issues(orderBy: { field: CREATED_AT, direction: DESC }, first: $pagination, after: $after) {
-        totalCount
-        edges {
-          cursor
-          node {
-            id
-            title
-            state
-            stateReason
-            createdAt
-          }
-        }
-      }
-    }
-  }
-`);
-
 
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -57,16 +35,9 @@ export const loader = async ({ request }: LoaderArgs) => {
     return redirect('/github/login');
   }
 
-  const envGithubApiUrl = z.string().parse(process.env.GITHUB_API_URL);
-  const graphqlClient = new GraphQLClient(envGithubApiUrl, {
-    headers: {
-      authorization: `${token.token_type} ${token.access_token}`
-    }
-  });
+  const issues = await getIssues(token, ISSUE_PAGINATION, null);
 
-  const data = await graphqlClient.request(issuesQueryDocument, { pagination: ISSUE_PAGINATION, after: null });
-
-  return json(data.viewer.issues);
+  return json(issues);
 };
 
 export default function Index() {
