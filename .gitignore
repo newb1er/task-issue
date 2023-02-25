@@ -9,6 +9,5 @@ node_modules
 /public/build
 /api/index.js
 /api/index.js.map
-/app/gql/**
 
 .DS_Store
