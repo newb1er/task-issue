@@ -11,11 +11,17 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.5.1",
+    "@emotion/cache": "^11.10.5",
+    "@emotion/react": "^11",
+    "@emotion/server": "^11",
+    "@emotion/styled": "^11",
     "@graphql-typed-document-node/core": "^3.1.1",
     "@remix-run/node": "^1.12.0",
     "@remix-run/react": "^1.12.0",
     "@remix-run/vercel": "^1.12.0",
     "@vercel/node": "^2.6.2",
+    "framer-motion": "^6",
     "graphql": "^16.6.0",
     "graphql-request": "^5.1.0",
     "react": "^18.2.0",
