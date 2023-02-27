@@ -29,7 +29,7 @@ export async function getIssues(
   token: { token_type: string; access_token: string },
   pagination: number,
   after: string | null
-): Promise<any> {
+) {
   const client = new GraphQLClient("https://api.github.com/graphql", {
     headers: {
       Authorization: `${token.token_type} ${token.access_token}`,
