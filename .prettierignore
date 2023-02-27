@@ -1,0 +1,4 @@
+# Ignore Artifects:
+api
+node_modules
+public
