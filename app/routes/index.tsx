@@ -1,3 +1,4 @@
+import { Card, CardBody } from "@chakra-ui/react";
 import { json, redirect, type LoaderArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { z } from "zod";
@@ -44,7 +45,13 @@ export default function Index() {
     issues &&
     issues?.edges?.map(
       (issue, index) =>
-        issue?.node && <li key={`issus-${index}`}>{issue.node.title}</li>
+        issue?.node && (
+          <li key={`issus-${index}`}>
+            <Card>
+              <CardBody>{issue.node.title}</CardBody>
+            </Card>
+          </li>
+        )
     );
 
   return <ul>{issuesListView}</ul>;
