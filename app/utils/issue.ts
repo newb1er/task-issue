@@ -1,5 +1,6 @@
 import { GraphQLClient } from "graphql-request";
 import { graphql } from "~/gql/gql";
+import { type GithubToken } from "./oauth";
 
 const issuesQueryDocument = graphql(`
   query issues($after: String, $pagination: Int) {
@@ -26,7 +27,7 @@ const issuesQueryDocument = graphql(`
 `);
 
 export async function getIssues(
-  token: { token_type: string; access_token: string },
+  token: GithubToken,
   pagination: number,
   after: string | null
 ) {
