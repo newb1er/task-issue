@@ -1,6 +1,6 @@
 /* eslint-disable */
-import * as types from "./graphql.js";
-import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
+import * as types from './graphql.js';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 /**
  * Map of all GraphQL operations in the project.
@@ -13,8 +13,7 @@ import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel-plugin for production.
  */
 const documents = {
-  "\n  query issues($after: String, $pagination: Int) {\n    viewer {\n      issues(orderBy: { field: CREATED_AT, direction: DESC }, first: $pagination, after: $after) {\n        totalCount\n        edges {\n          cursor\n          node {\n            id\n            title\n            state\n            stateReason\n            createdAt\n          }\n        }\n      }\n    }\n  }\n":
-    types.IssuesDocument,
+    "\n  query issues($after: String, $pagination: Int) {\n    viewer {\n      issues(\n        orderBy: { field: CREATED_AT, direction: DESC }\n        first: $pagination\n        after: $after\n      ) {\n        totalCount\n        edges {\n          cursor\n          node {\n            id\n            title\n            state\n            stateReason\n            createdAt\n          }\n        }\n      }\n    }\n  }\n": types.IssuesDocument,
 };
 
 /**
@@ -34,13 +33,10 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(
-  source: "\n  query issues($after: String, $pagination: Int) {\n    viewer {\n      issues(orderBy: { field: CREATED_AT, direction: DESC }, first: $pagination, after: $after) {\n        totalCount\n        edges {\n          cursor\n          node {\n            id\n            title\n            state\n            stateReason\n            createdAt\n          }\n        }\n      }\n    }\n  }\n"
-): (typeof documents)["\n  query issues($after: String, $pagination: Int) {\n    viewer {\n      issues(orderBy: { field: CREATED_AT, direction: DESC }, first: $pagination, after: $after) {\n        totalCount\n        edges {\n          cursor\n          node {\n            id\n            title\n            state\n            stateReason\n            createdAt\n          }\n        }\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query issues($after: String, $pagination: Int) {\n    viewer {\n      issues(\n        orderBy: { field: CREATED_AT, direction: DESC }\n        first: $pagination\n        after: $after\n      ) {\n        totalCount\n        edges {\n          cursor\n          node {\n            id\n            title\n            state\n            stateReason\n            createdAt\n          }\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query issues($after: String, $pagination: Int) {\n    viewer {\n      issues(\n        orderBy: { field: CREATED_AT, direction: DESC }\n        first: $pagination\n        after: $after\n      ) {\n        totalCount\n        edges {\n          cursor\n          node {\n            id\n            title\n            state\n            stateReason\n            createdAt\n          }\n        }\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
 }
 
-export type DocumentType<TDocumentNode extends DocumentNode<any, any>> =
-  TDocumentNode extends DocumentNode<infer TType, any> ? TType : never;
+export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;

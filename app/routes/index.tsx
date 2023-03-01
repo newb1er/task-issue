@@ -1,51 +1,21 @@
-import { json, redirect, type LoaderArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import { z } from "zod";
+import { redirect, type LoaderArgs } from "@remix-run/node";
 
-import { oauthToken } from "~/cookie";
-import { getIssues } from "~/utils/issue";
-
-const ISSUE_PAGINATION = 10;
-
-const tokenCookieSchema = z.object({
-  access_token: z.string(),
-  token_type: z.enum(["basic", "bearer"]),
-  scope: z.string(),
-});
+import { retrieveGithubToken, validateGithubToken } from "~/utils/oauth";
 
 export const loader = async ({ request }: LoaderArgs) => {
-  let token;
+  const cookieString = request.headers.get("Cookie");
+  if (!cookieString) return redirect("/github/login");
+
+  const token = await retrieveGithubToken(cookieString);
 
   try {
-    token = tokenCookieSchema.parse(
-      (await oauthToken.parse(request.headers.get("Cookie"))) || {}
-    );
-
-    const ret = await fetch("https://api.github.com/", {
-      headers: {
-        Authentication: `${token.token_type} ${token.access_token}`,
-      },
-    });
-
-    if (!ret.ok) throw Error("Not Authenticated");
+    if (token === null) throw new Error("Token is null");
+    validateGithubToken(token);
   } catch {
     return redirect("/github/login");
   }
 
-  const issues = await getIssues(token, ISSUE_PAGINATION, null);
-
-  return json(issues);
+  return redirect("/task");
 };
 
-export default function Index() {
-  const issues = useLoaderData<typeof loader>();
-
-  const issuesListView =
-    issues &&
-    issues?.edges?.map(
-      (issue, index) =>
-        issue?.node && <li key={`issus-${index}`}>{issue.node.title}</li>
-    );
-
-  return <ul>{issuesListView}</ul>;
-}
+export default function Index() {}

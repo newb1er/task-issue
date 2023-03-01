@@ -14,7 +14,7 @@ const config: CodegenConfig = {
       },
     },
   ],
-  documents: ["app/**/*.tsx"],
+  documents: ["app/**/*.{ts, tsx}"],
   ignoreNoDocuments: true,
   emitLegacyCommonJSImports: false,
   generates: {
