@@ -1020,6 +1020,8 @@ export type BranchProtectionRule = Node & {
   requireLastPushApproval: Scalars['Boolean'];
   /** Number of approving reviews required to update matching branches. */
   requiredApprovingReviewCount?: Maybe<Scalars['Int']>;
+  /** List of required deployment environments that must be deployed successfully to update matching branches */
+  requiredDeploymentEnvironments?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** List of required status check contexts that must pass for commits to be accepted to matching branches. */
   requiredStatusCheckContexts?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** List of required status checks that must pass for commits to be accepted to matching branches. */
@@ -1032,6 +1034,8 @@ export type BranchProtectionRule = Node & {
   requiresCommitSignatures: Scalars['Boolean'];
   /** Are conversations required to be resolved before merging. */
   requiresConversationResolution: Scalars['Boolean'];
+  /** Does this branch require deployment to specific environments before merging */
+  requiresDeployments: Scalars['Boolean'];
   /** Are merge commits prohibited from being pushed to this branch. */
   requiresLinearHistory: Scalars['Boolean'];
   /** Are status checks required to update matching branches. */
@@ -3080,6 +3084,8 @@ export type CreateBranchProtectionRuleInput = {
   requireLastPushApproval?: InputMaybe<Scalars['Boolean']>;
   /** Number of approving reviews required to update matching branches. */
   requiredApprovingReviewCount?: InputMaybe<Scalars['Int']>;
+  /** The list of required deployment environments */
+  requiredDeploymentEnvironments?: InputMaybe<Array<Scalars['String']>>;
   /** List of required status check contexts that must pass for commits to be accepted to matching branches. */
   requiredStatusCheckContexts?: InputMaybe<Array<Scalars['String']>>;
   /** The list of required status checks */
@@ -3092,6 +3098,8 @@ export type CreateBranchProtectionRuleInput = {
   requiresCommitSignatures?: InputMaybe<Scalars['Boolean']>;
   /** Are conversations required to be resolved before merging. */
   requiresConversationResolution?: InputMaybe<Scalars['Boolean']>;
+  /** Are successful deployments required before merging. */
+  requiresDeployments?: InputMaybe<Scalars['Boolean']>;
   /** Are merge commits prohibited from being pushed to this branch. */
   requiresLinearHistory?: InputMaybe<Scalars['Boolean']>;
   /** Are status checks required to update matching branches. */
@@ -24587,6 +24595,8 @@ export type UpdateBranchProtectionRuleInput = {
   requireLastPushApproval?: InputMaybe<Scalars['Boolean']>;
   /** Number of approving reviews required to update matching branches. */
   requiredApprovingReviewCount?: InputMaybe<Scalars['Int']>;
+  /** The list of required deployment environments */
+  requiredDeploymentEnvironments?: InputMaybe<Array<Scalars['String']>>;
   /** List of required status check contexts that must pass for commits to be accepted to matching branches. */
   requiredStatusCheckContexts?: InputMaybe<Array<Scalars['String']>>;
   /** The list of required status checks */
@@ -24599,6 +24609,8 @@ export type UpdateBranchProtectionRuleInput = {
   requiresCommitSignatures?: InputMaybe<Scalars['Boolean']>;
   /** Are conversations required to be resolved before merging. */
   requiresConversationResolution?: InputMaybe<Scalars['Boolean']>;
+  /** Are successful deployments required before merging. */
+  requiresDeployments?: InputMaybe<Scalars['Boolean']>;
   /** Are merge commits prohibited from being pushed to this branch. */
   requiresLinearHistory?: InputMaybe<Scalars['Boolean']>;
   /** Are status checks required to update matching branches. */
@@ -26688,6 +26700,8 @@ export type WorkflowRun = Node & UniformResourceLocatable & {
   databaseId?: Maybe<Scalars['Int']>;
   /** The log of deployment reviews */
   deploymentReviews: DeploymentReviewConnection;
+  /** The event that triggered the workflow run */
+  event: Scalars['String'];
   id: Scalars['ID'];
   /** The pending deployment requests of all check runs in this workflow run */
   pendingDeploymentRequests: DeploymentRequestConnection;
@@ -26763,7 +26777,7 @@ export type IssuesQueryVariables = Exact<{
 }>;
 
 
-export type IssuesQuery = { __typename?: 'Query', viewer: { __typename?: 'User', issues: { __typename?: 'IssueConnection', totalCount: number, edges?: Array<{ __typename?: 'IssueEdge', cursor: string, node?: { __typename?: 'Issue', id: string, title: string, state: IssueState, stateReason?: IssueStateReason | null, createdAt: any } | null } | null> | null } } };
+export type IssuesQuery = { __typename?: 'Query', viewer: { __typename?: 'User', issues: { __typename?: 'IssueConnection', totalCount: number, edges?: Array<{ __typename?: 'IssueEdge', cursor: string, node?: { __typename?: 'Issue', id: string, title: string, createdAt: any } | null } | null> | null } } };
 
 
-export const IssuesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"issues"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pagination"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"viewer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"issues"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"field"},"value":{"kind":"EnumValue","value":"CREATED_AT"}},{"kind":"ObjectField","name":{"kind":"Name","value":"direction"},"value":{"kind":"EnumValue","value":"DESC"}}]}},{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pagination"}}},{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cursor"}},{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"stateReason"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<IssuesQuery, IssuesQueryVariables>;
+export const IssuesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"issues"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pagination"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"viewer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"issues"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filterBy"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"states"},"value":{"kind":"EnumValue","value":"OPEN"}}]}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"field"},"value":{"kind":"EnumValue","value":"CREATED_AT"}},{"kind":"ObjectField","name":{"kind":"Name","value":"direction"},"value":{"kind":"EnumValue","value":"DESC"}}]}},{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pagination"}}},{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cursor"}},{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<IssuesQuery, IssuesQueryVariables>;

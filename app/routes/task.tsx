@@ -2,7 +2,7 @@ import { json, redirect, type LoaderArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { Container, List, ListItem, Card, CardBody } from "@chakra-ui/react";
 
-import { getIssues } from "~/utils/issue";
+import { getTasks } from "~/utils/task";
 import { retrieveGithubToken } from "~/utils/oauth";
 
 const PAGINATION = 10;
@@ -14,30 +14,27 @@ export const loader = async ({ request }: LoaderArgs) => {
   const oauthToken = await retrieveGithubToken(cookieString);
   if (oauthToken === null) return redirect("/github/login");
 
-  const issues = await getIssues(oauthToken, PAGINATION, null);
+  const tasks = await getTasks(oauthToken, PAGINATION, null);
 
-  return json(issues);
+  return json(tasks);
 };
 
 export default function Task() {
-  const issues = useLoaderData<typeof loader>();
+  const tasks = useLoaderData<typeof loader>();
 
-  const issuesListView =
-    issues &&
-    issues?.edges?.map(
-      (issue, index) =>
-        issue?.node && (
-          <ListItem key={`issus-${index}`}>
-            <Card>
-              <CardBody>{issue.node.title}</CardBody>
-            </Card>
-          </ListItem>
-        )
-    );
+  const taskListView =
+    tasks &&
+    tasks.list?.map((task, index) => (
+      <ListItem key={`task-${index}`}>
+        <Card>
+          <CardBody>{task?.title}</CardBody>
+        </Card>
+      </ListItem>
+    ));
 
   return (
     <Container>
-      <List spacing="1rem">{issuesListView}</List>
+      <List spacing="1rem">{taskListView}</List>
     </Container>
   );
 }
