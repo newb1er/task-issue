@@ -2,10 +2,11 @@ import { GraphQLClient } from "graphql-request";
 import { graphql } from "~/gql/gql";
 import { type GithubToken } from "./oauth";
 
-const issuesQueryDocument = graphql(`
+const tasksQueryDocument = graphql(`
   query issues($after: String, $pagination: Int) {
     viewer {
       issues(
+        filterBy: { states: OPEN }
         orderBy: { field: CREATED_AT, direction: DESC }
         first: $pagination
         after: $after
@@ -16,8 +17,6 @@ const issuesQueryDocument = graphql(`
           node {
             id
             title
-            state
-            stateReason
             createdAt
           }
         }
@@ -26,7 +25,7 @@ const issuesQueryDocument = graphql(`
   }
 `);
 
-export async function getIssues(
+export async function getTasks(
   token: GithubToken,
   pagination: number,
   after: string | null
@@ -37,10 +36,25 @@ export async function getIssues(
     },
   });
 
-  const data = await client.request(issuesQueryDocument, {
+  const data = await client.request(tasksQueryDocument, {
     pagination,
     after,
   });
 
-  return data.viewer.issues;
+  const tasklist =
+    data.viewer.issues.edges?.map((edge) => {
+      return (
+        edge?.node && {
+          id: edge.node.id,
+          title: edge.node.title,
+          createdAt: edge.node.createdAt,
+        }
+      );
+    }) || [];
+
+  return {
+    totalCount: data.viewer.issues.totalCount,
+    list: tasklist,
+    lastCursor: data.viewer.issues.edges?.slice(-1)[0]?.cursor || null,
+  };
 }
